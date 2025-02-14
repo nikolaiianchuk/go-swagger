@@ -7,7 +7,7 @@ The reference framework will make use of a swagger API that is based on the denc
 The general idea is that it is a middleware which you provide with the swagger spec.
 This document can be either JSON or YAML as both are supported.
 
-In addition to the middleware there are some generator commands that will use the swagger spec to generate models, parameter models, operation interfaces and a mux.
+In addition to the middleware there are some generator commands that will use the swagger spec to generate models, parameter models, operation interfaces and a mux!
 
 ## The middleware
 
