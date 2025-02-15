@@ -1,10 +1,7 @@
-name: "Update documentation (master/tag)"
+name: "Update documentation (PR)"
 
 on:
-  push:
-    tags:
-      - v*
-    branches: [ "master" ]
+  pull_request:
     paths:
     - docs/**
     - hack/doc-site/**
@@ -12,8 +9,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: "pages"
@@ -37,8 +32,17 @@ jobs:
             hack/
             docs/
 
-      - name: Get all tags
-        run: git fetch --prune --unshallow --tags
+      - name: Get all tags (go-swagger repo)
+        if: ${{ github.repository == 'go-swagger/go-swagger' }}
+        run: |
+          git fetch --prune --unshallow --tags
+
+      - name: Get all tags (fork)
+        if: ${{ github.repository != 'go-swagger/go-swagger' }}
+        run: |
+          git remote add upstream "https://github.com/go-swagger/go-swagger"
+          git fetch upstream --prune --unshallow --tags
+          git fetch --prune --unshallow --tags
 
       -
         name: Initialize themes
@@ -84,14 +88,3 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: hack/doc-site/hugo/public
-
-  deploy-doc:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build-doc
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
