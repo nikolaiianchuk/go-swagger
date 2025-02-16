@@ -1,3 +1,12 @@
+on:
+  push:
+    tags:
+      - v*
+    branches:
+      - master
+
+  pull_request:
+
 jobs:
   fossa-scan:
     runs-on: ubuntu-latest
